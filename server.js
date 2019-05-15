@@ -1,3 +1,21 @@
+var zipkinHost = "localhost"
+var zipkinPort = 9411
+
+if (process.env.ZIPKIN_SERVICE_HOST && process.env.ZIPKIN_SERVICE_PORT) {
+  console.log("Routing Zipkin traffic to the Zipkin Kubernetes service")
+  zipkinHost = process.env.ZIPKIN_SERVICE_HOST
+  zipkinPort = process.env.ZIPKIN_SERVICE_PORT
+} else {
+  console.log("Detected we're running the Zipkin server locally")
+}
+
+var appzip = require('appmetrics-zipkin')({
+  host: zipkinHost,
+  port: zipkinPort,
+  serviceName:'my-kube-frontend',
+  sampleRate: 1.0
+});
+
 var request      = require("request")
   , express      = require("express")
   , morgan       = require("morgan")
